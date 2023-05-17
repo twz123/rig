@@ -1,0 +1,15 @@
+FROM docker.io/library/alpine:3.18.0
+
+RUN apk add --no-cache \
+  alpine-base \
+  openrc \
+  busybox-openrc \
+  openssh-server \
+  bash \
+  && rc-update add syslog boot \
+  && rc-update add sshd default \
+  && rc-update add local default \
+# disable ttys
+  && sed -i -e 's/^\(tty[0-9]\)/# \1/' /etc/inittab \
+# no greetings
+  && truncate -c -s0 /etc/issue /etc/motd

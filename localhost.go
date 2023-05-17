@@ -156,7 +156,12 @@ func (c *Localhost) command(cmd string, o *exec.Options) (*osexec.Cmd, error) {
 		return osexec.Command("cmd.exe", "/c", cmd), nil
 	}
 
-	return osexec.Command("bash", "-c", "--", cmd), nil
+	shell := os.Getenv("SHELL")
+	if shell == "" {
+		shell = "sh"
+	}
+
+	return osexec.Command(shell, "-c", "--", cmd), nil
 }
 
 // ExecInteractive executes a command on the host and copies stdin/stdout/stderr from local host
